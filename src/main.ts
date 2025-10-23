@@ -1,9 +1,11 @@
+import { DoctoriLogger } from '@doctori/shared';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  const logger = new DoctoriLogger('NotificationService');
 
   // CORS configuration
   app.enableCors({
@@ -22,11 +24,10 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api/docs', app, document);
 
-  const port = Number(process.env.PORT) || 3005;
+  const port = Number(process.env.PORT) || 4005;
   await app.listen(port);
 
-  console.log(`🚀 Notification Service is running on: http://localhost:${port}`);
-  console.log(`📚 API Documentation available at: http://localhost:${port}/api/docs`);
+  logger.logServiceStart('Notification Service', port, `http://localhost:${port}/api/docs`);
 }
 
 bootstrap();
